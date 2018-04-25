@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Collection<T> : IEnumerable<T>
+    class Collection<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
     {
         T[] mas = new T[0];
         public T this[int index]
@@ -55,19 +55,18 @@ namespace Laba12
         }
         public void Show()
         {
-
+            foreach(T temp in mas)
+            {
+                Console.WriteLine(temp.ToString());
+            }
         }
-        public Collection<T> Clone()
+        public bool Contains(T Search)
         {
-            return null;
-        }
-        public void Sort()
-        {
-
-        }
-        public void Search()
-        {
-
+            foreach(T temp in mas)
+            {
+                if (temp.Equals(Search)) return true;
+            }
+            return false;
         }
         public IEnumerator<T> GetEnumerator()
         {
@@ -76,6 +75,18 @@ namespace Laba12
         IEnumerator IEnumerable.GetEnumerator()
         {
             return (this as IEnumerable<T>).GetEnumerator();
+        }
+
+        object ICloneable.Clone()
+        {
+            return this;
+        }
+
+        public int Compare(T x, T y)
+        {
+            if (x.ToString().Length == y.ToString().Length) return 0;
+            if (x.ToString().Length > y.ToString().Length) return 1;
+            return -1;
         }
     }
 }

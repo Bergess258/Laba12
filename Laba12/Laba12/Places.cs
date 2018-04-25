@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class PlacesV
+    class PlacesV :IComparable
     {
         string name;
         public string Name
@@ -28,9 +28,18 @@ namespace Laba12
         {
             Name = name;
         }
-        public virtual void Show()
+
+        public int CompareTo(object obj)
         {
-            Console.WriteLine("Место " + Name);
+            PlacesV temp=obj as PlacesV;
+            if (temp.name == this.name) return 0;
+            if (temp.name.Length > name.Length) return 1;
+            return -1;
+        }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
     class Region : PlacesV //Кол-во мужчин во всех регионах
@@ -68,9 +77,9 @@ namespace Laba12
             NumberMans = mans;
             numberCities = cit;
         }
-        public override void Show()
+        public override string ToString()
         {
-            Console.WriteLine(Name + " Область");
+            return Name + " Область";
         }
     }
 
@@ -97,9 +106,9 @@ namespace Laba12
         {
             Citizens = Countcitizens;
         }
-        public override void Show()
+        public override string ToString()
         {
-            Console.WriteLine("Город " + Name);
+            return "Город " + Name;
         }
     }
 
@@ -122,9 +131,9 @@ namespace Laba12
         {
             countFabriks = t;
         }
-        public override void Show()
+        public override string ToString()
         {
-            Console.WriteLine("Мегаполис " + Name);
+            return "Мегаполис " + Name;
         }
     }
 
@@ -148,9 +157,9 @@ namespace Laba12
         {
             index = index1;
         }
-        public override void Show()
+        public override string ToString()
         {
-            Console.WriteLine("Адрес: " + Name);
+            return "Адрес: " + Name;
         }
     }
 }
