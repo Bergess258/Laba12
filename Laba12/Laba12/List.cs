@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Collection : IEnumerable, ICloneable, ICollection, IComparer
+    class List : IEnumerable, ICloneable, ICollection, IComparer
     {
         PlacesV[] mas = new PlacesV[0];
         public PlacesV this[int index]

@@ -11,7 +11,7 @@ namespace Laba12
         static void Main(string[] args)
         {
             Random rand = new Random();
-            Collection<PlacesV> Places = new Collection<PlacesV>();
+            List<PlacesV> Places = new List<PlacesV>();
             //Collection Places = new Collection();
             for (int i = 0; i < 10; i++)
             {

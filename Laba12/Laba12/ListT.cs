@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Collection<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
+    class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
     {
         static int capacity = 8;
         T[] mas = new T[capacity];
