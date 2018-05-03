@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Collection : IEnumerable
+    class Collection : IEnumerable, ICloneable, ICollection, IComparer
     {
         PlacesV[] mas = new PlacesV[0];
         public PlacesV this[int index]
@@ -26,10 +26,6 @@ namespace Laba12
         {
             mas = new PlacesV[0];
         }
-        public void CopyTo(PlacesV[] array, int index)
-        {
-            mas.CopyTo(array, index);
-        }
         public bool IsReadOnly
         {
             get { return false; }
@@ -38,6 +34,11 @@ namespace Laba12
         {
             get { return mas.Length; }
         }
+
+        public object SyncRoot => throw new NotImplementedException();
+
+        public bool IsSynchronized => throw new NotImplementedException();
+
         public bool Remove(PlacesV item)
         {
             if (mas.Contains(item))
@@ -55,23 +56,51 @@ namespace Laba12
         }
         public void Show()
         {
-
+            foreach (PlacesV temp in mas)
+            {
+                Console.WriteLine(temp.ToString());
+            }
         }
-        public Collection Clone()
+        public bool Contains(PlacesV Search)
         {
-            return null;
+            foreach (PlacesV temp in mas)
+            {
+                if (temp.ToString() == Search.ToString()) return true;
+            }
+            return false;
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)this).GetEnumerator();
+        }
+
+        object ICloneable.Clone()
+        {
+            return this;
         }
         public void Sort()
         {
-
+            Array.Sort(mas);
         }
-        public void Search()
+        public int Compare(object x, object y)
         {
-
+            if (x.ToString().Length == y.ToString().Length) return 0;
+            if (x.ToString().Length > y.ToString().Length) return 1;
+            return -1;
         }
-        public IEnumerator GetEnumerator()
+
+        public void CopyTo(Array array, int index)
         {
-            return ((IEnumerable)mas).GetEnumerator();//вапрыва
+            if (index > 0 && index <= mas.Length)
+            {
+                PlacesV[] Temp = new PlacesV[mas.Length - index + 1];
+                int c = 0;
+                for (int i = index - 1; i < mas.Length; i++)
+                    Temp[c++] = mas[i];
+                array = Temp;
+            }
+            else
+                throw new IndexOutOfRangeException();
         }
     }
 }

@@ -9,7 +9,8 @@ namespace Laba12
 {
     class Collection<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
     {
-        T[] mas = new T[0];
+        static int capacity = 8;
+        T[] mas = new T[capacity];
         public T this[int index]
         {
             get { return mas[index]; }
@@ -28,7 +29,16 @@ namespace Laba12
         }
         public void CopyTo(T[] array, int index)
         {
-            mas.CopyTo(array, index);
+            if (index > 0 && index <= mas.Length)
+            {
+                T[] Temp = new T[mas.Length - index + 1];
+                int c = 0;
+                for (int i = index - 1; i < mas.Length; i++)
+                    Temp[c++] = mas[i];
+                array = Temp;
+            }
+            else
+                throw new IndexOutOfRangeException();
         }
         public bool IsReadOnly
         {
@@ -64,7 +74,7 @@ namespace Laba12
         {
             foreach(T temp in mas)
             {
-                if (temp.Equals(Search)) return true;
+                if (temp.ToString()==Search.ToString()) return true;
             }
             return false;
         }
@@ -80,6 +90,10 @@ namespace Laba12
         object ICloneable.Clone()
         {
             return this;
+        }
+        public void Sort()
+        {
+            Array.Sort(mas);
         }
 
         public int Compare(T x, T y)

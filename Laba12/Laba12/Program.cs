@@ -12,35 +12,96 @@ namespace Laba12
         {
             Random rand = new Random();
             Collection<PlacesV> Places = new Collection<PlacesV>();
+            //Collection Places = new Collection();
             for (int i = 0; i < 10; i++)
             {
                 string Name = "";
                 int c = rand.Next(4);
                 if (c == 0)
                 {
-                    Name = RandomNameRegion(rand);
-                    Places.Add(new Region(Name, rand.Next(0, 10000000), rand.Next(0, 20)));
+                    Region temp;
+                    do
+                    {
+                        Name = RandomNameRegion(rand);
+                        temp = new Region(Name, rand.Next(0, 10000000), rand.Next(0, 20));
+                    } while (Places.Contains(temp));
+                    Places.Add(temp);
                 }
                 else
                 if (c == 1)
                 {
-                    Name = RandomCity(rand);
-                    Places.Add(new City(Name, rand.Next(0, 900000)));
+                    City temp;
+                    do
+                    {
+                        Name = RandomCity(rand);
+                        temp = new City(Name, rand.Next(0, 900000));
+                    } while (Places.Contains(temp));
+                    Places.Add(temp);
                 }
                 else
                 if (c == 2)
                 {
-                    Name = RandomMegapolis(rand);
-                    Places.Add(new Megapolis(Name, rand.Next(0, 20)));
+                    Megapolis temp;
+                    do
+                    {
+                        Name = RandomMegapolis(rand);
+                        temp = new Megapolis(Name, rand.Next(0, 20));
+                    } while (Places.Contains(temp));
+                    Places.Add(temp);
                 }
                 else
                 {
-                    Name = RandomAdres(rand);
-                    Places.Add(new Adres(Name));
+                    Adres temp;
+                    do
+                    {
+                        Name = RandomAdres(rand);
+                        temp = new Adres(Name);
+                    } while (Places.Contains(temp));
+                    Places.Add(temp);
                 }
             } 
             Places.Show();
+            Places.Sort();
+            Console.WriteLine();
+            Places.Show();
+            PlacesV[] sd = new PlacesV[10];
+            Places.CopyTo(sd, 9);
+            foreach(PlacesV t in sd)
+            {
+                Console.WriteLine(t.ToString());
+            }
+            //BaseTo 
+            //List<Person>
+            //List<String>
+            //Dictionary<Person><Student>
+            //Dictionary<string><Student>
+            int count = 0;
+            ForEach(Places, Negativecount,ref count);
         }
+        public static void ForEach(ICollection<PlacesV> collection, Handler handler,ref int result)
+        {
+            foreach(PlacesV x in collection)
+            {
+                handler(x, ref result);
+            }
+        }
+        public static void Negativecount(PlacesV x, ref int y)//даунизми)
+        {
+            if (x.ToString().Length < 0) y++;
+        }
+        public static void Positivecount(int x, ref int y)
+        {
+            if (x > 0) y++;
+        }
+        public static void Max(int x, ref int max)
+        {
+            if (x > max) max = x;
+        }
+        public static void Min(int x, ref int min)
+        {
+            if (x < min) min = x;
+        }
+        public delegate void Handler(PlacesV x, ref int y);
         private static string RandomAdres(Random rand)
         {
             string[] Streets = new string[] { "улица Павловская", "улица Бахаревская", "улица Гамовская", "улица Запрудская", "улица Ключевая", "улица Красавинская", "улица Липогорская", "улица Набережная" };

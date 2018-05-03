@@ -32,8 +32,8 @@ namespace Laba12
         public int CompareTo(object obj)
         {
             PlacesV temp=obj as PlacesV;
-            if (temp.name == this.name) return 0;
-            if (temp.name.Length > name.Length) return 1;
+            if (temp.ToString() == this.ToString()) return 0;
+            if (temp.ToString().Length > this.ToString().Length) return 1;
             return -1;
         }
 
