@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dictionary.cs" />
+    <Compile Include="DictionaryCommon.cs" />
+    <Compile Include="DictionaryPlace.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListT.cs" />
     <Compile Include="Places.cs" />

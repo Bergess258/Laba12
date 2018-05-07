@@ -14,7 +14,7 @@ namespace Laba12
         public PlacesV Value;
         public PlacesV Key;
     }
-    class Dictionary : IDictionary<object, object>
+    class DictionaryPlace : IDictionary<object, object>
     {
         private int count;
         private int SizeMass;
@@ -64,6 +64,7 @@ namespace Laba12
                                 Temp2.Value = (PlacesV)value;
                                 entries[count] = Temp2;
                             }
+                            temp = entries[temp.Next];
                         }
                     } while (true);
                 }
@@ -75,16 +76,25 @@ namespace Laba12
                 }
             }
         }
+        public int Count
+        {
+            get { return count; }
+        }
 
-        public int[] Keys => throw new NotImplementedException();
+        public bool IsReadOnly { get { return false; } }
 
-        public Entry[] Values => throw new NotImplementedException();
-
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        ICollection<object> IDictionary<object, object>.Keys => throw new NotImplementedException();
+        ICollection<object> IDictionary<object, object>.Keys
+        {
+            get
+            {
+                PlacesV[] Temp = new PlacesV[count];
+                for(int i = 0; i < count; i++)
+                {
+                    Temp[i] = entries[i].Key;
+                }
+                return Temp;
+            }
+        }
 
         ICollection<object> IDictionary<object, object>.Values => throw new NotImplementedException();
         public void Add(object key, object value)
