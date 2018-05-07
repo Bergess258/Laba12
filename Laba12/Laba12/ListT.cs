@@ -9,8 +9,8 @@ namespace Laba12
 {
     class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
     {
-        static int capacity = 8;
-        T[] mas = new T[capacity];
+        private static int capacity = 0;
+        private T[] mas = new T[capacity];
         public T this[int index]
         {
             get { return mas[index]; }

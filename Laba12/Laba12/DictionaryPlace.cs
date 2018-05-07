@@ -13,14 +13,30 @@ namespace Laba12
         public int Next=-1;
         public PlacesV Value;
         public PlacesV Key;
+        public override string ToString()
+        {
+            return Key.ToString() + "   " + Value.ToString();
+        }
     }
-    class DictionaryPlace : IDictionary<object, object>
+    class DictionaryPlace : IDictionary<PlacesV, PlacesV>
     {
-        private int count;
-        private int SizeMass;
-        private int[] buckets;
-        private Entry[] entries;
-        public object this[object key]
+        private int count=0;
+        private int SizeMass=100;
+        private int[] buckets=new int[100];
+        private Entry[] entries=new Entry[100];
+        public DictionaryPlace()
+        {
+            for (int i = 0; i < SizeMass; i++)
+            {
+                buckets[i] = -1;
+            }
+            Point temp = new Point();
+            for (int i = 0; i < SizeMass; i++)
+            {
+                entries[i] = new Entry();
+            }
+        }
+        public PlacesV this[PlacesV key]
         {
             get
             {
@@ -30,7 +46,7 @@ namespace Laba12
                 {
                     do
                     {
-                        if (temp.Key.ToString() == key.ToString()) return temp;
+                        if (temp.Key.ToString() == key.ToString()) return temp.Value;
                         else
                         {
                             if (temp.Next == -1)
@@ -83,7 +99,7 @@ namespace Laba12
 
         public bool IsReadOnly { get { return false; } }
 
-        ICollection<object> IDictionary<object, object>.Keys
+        ICollection<PlacesV> IDictionary<PlacesV, PlacesV>.Keys
         {
             get
             {
@@ -96,34 +112,91 @@ namespace Laba12
             }
         }
 
-        ICollection<object> IDictionary<object, object>.Values => throw new NotImplementedException();
-        public void Add(object key, object value)
+        ICollection<PlacesV> IDictionary<PlacesV, PlacesV>.Values => throw new NotImplementedException();
+        public void Add(PlacesV key, PlacesV value)
         {
-            throw new NotImplementedException();
+            int hash = GetHash(key);
+            buckets[hash] = count++;
+            this[key] = value;
+            CheckForSize();
         }
 
-        public void Add(KeyValuePair<object, object> item)
+        private void CheckForSize()
         {
-            throw new NotImplementedException();
+            if (count / (double)SizeMass > 0.7)
+            {
+                SizeMass += 100;
+                int[] te;
+                Entry[] Temp;
+                CreateMasses(out te, out Temp);
+                for (int i = 0; i < count; i++)
+                {
+                    Temp[i] = entries[i];
+                    te[GetHash(entries[i].Key)] = i;
+                }
+                entries = Temp;
+                buckets = te;
+            }
+            else
+            if (SizeMass - 100 != 0)
+                if ((count / (double)(SizeMass - 100)) < 0.1)
+                {
+                    SizeMass -= 100;
+                    int[] te;
+                    Entry[] Temp;
+                    CreateMasses(out te, out Temp);
+                    for (int i = 0; i < count; i++)
+                    {
+                        Temp[i] = entries[i];
+                        te[GetHash(entries[i].Key)] = i;
+                    }
+                    entries = Temp;
+                    buckets = te;
+                }
+        }
+
+        private void CreateMasses(out int[] te, out Entry[] Temp)
+        {
+            te = new int[SizeMass];
+            Temp = new Entry[SizeMass];
+            for (int i = 0; i < SizeMass; i++)
+            {
+                te[i] = -1;
+            }
+            for (int i = 0; i < SizeMass; i++)
+            {
+                Temp[i] = new Entry();
+            }
+        }
+
+        public void Add(KeyValuePair<PlacesV, PlacesV> item)
+        {
+            int hash = GetHash(item.Key);
+            buckets[hash] = count++;
+            this[item.Key] = item.Value;
+            CheckForSize();
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            count = 0;
+            SizeMass = 100;
+            buckets = new int[100];
+            entries = new Entry[100];
         }
-        public bool Contains(KeyValuePair<object, object> item)
+        public bool Contains(KeyValuePair<PlacesV, PlacesV> item)
         {
             throw new NotImplementedException();
         }
-        public bool ContainsKey(object key)
+        public bool ContainsKey(PlacesV key)
         {
             throw new NotImplementedException();
         }
-        public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<PlacesV, PlacesV>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
-        public int GetHash(object adres)
+        public int GetHash(PlacesV adres)
         {
             int hashcode = 0;
             double a = 0.6180339887;
@@ -133,16 +206,16 @@ namespace Laba12
             hashcode = (int)(SizeMass * t) % SizeMass;
             return hashcode;
         }
-        public bool Remove(object key)
+        public bool Remove(PlacesV key)
         {
             throw new NotImplementedException();
         }
 
-        public bool Remove(KeyValuePair<object, object> item)
+        public bool Remove(KeyValuePair<PlacesV, PlacesV> item)
         {
             throw new NotImplementedException();
         }
-        public bool TryGetValue(object key, out object value)
+        public bool TryGetValue(PlacesV key, out PlacesV value)
         {
             throw new NotImplementedException();
         }
@@ -152,9 +225,16 @@ namespace Laba12
             throw new NotImplementedException();
         }
 
-        IEnumerator<KeyValuePair<object, object>> IEnumerable<KeyValuePair<object, object>>.GetEnumerator()
+        IEnumerator<KeyValuePair<PlacesV, PlacesV>> IEnumerable<KeyValuePair<PlacesV, PlacesV>>.GetEnumerator()
         {
             throw new NotImplementedException();
+        }
+        public void Show()
+        {
+            foreach (Entry temp in entries)
+            {
+                Console.WriteLine(temp);
+            }
         }
     }
 }

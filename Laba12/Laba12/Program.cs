@@ -11,8 +11,36 @@ namespace Laba12
         static void Main(string[] args)
         {
             Random rand = new Random();
-            List<PlacesV> Places = new List<PlacesV>();
-            //Collection Places = new Collection();
+            DictionaryCommon Places = new DictionaryCommon();
+            List<PlacesV> Places1 = new List<PlacesV>();
+            List<PlacesV> Places2 = new List<PlacesV>();
+            RandomPlaces(rand, Places2);
+            RandomPlaces(rand, Places1);
+            for(int i = 0; i < Places1.Count; i++)
+            {
+                Places.Add(Places1[i], Places2[i]);
+            }
+            Places.Show();
+            //Places.Sort();
+            //Console.WriteLine();
+            //Places.Show();
+            //PlacesV[] sd = new PlacesV[10];
+            //Places.CopyTo(sd, 9);
+            //foreach(PlacesV t in sd)
+            //{
+            //    Console.WriteLine(t.ToString());
+            //}
+            //BaseTo
+            //List<Person>
+            //List<String>
+            //Dictionary<Person> < Student >
+            //Dictionary<string> < Student >
+            //int count = 0;
+            //ForEach(Places, Negativecount,ref count);
+        }
+
+        private static void RandomPlaces(Random rand, List<PlacesV> Places)
+        {
             for (int i = 0; i < 10; i++)
             {
                 string Name = "";
@@ -59,25 +87,9 @@ namespace Laba12
                     } while (Places.Contains(temp));
                     Places.Add(temp);
                 }
-            } 
-            Places.Show();
-            Places.Sort();
-            Console.WriteLine();
-            Places.Show();
-            PlacesV[] sd = new PlacesV[10];
-            Places.CopyTo(sd, 9);
-            foreach(PlacesV t in sd)
-            {
-                Console.WriteLine(t.ToString());
             }
-            //BaseTo 
-            //List<Person>
-            //List<String>
-            //Dictionary<Person><Student>
-            //Dictionary<string><Student>
-            int count = 0;
-            ForEach(Places, Negativecount,ref count);
         }
+
         public static void ForEach(ICollection<PlacesV> collection, Handler handler,ref int result)
         {
             foreach(PlacesV x in collection)

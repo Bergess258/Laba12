@@ -13,6 +13,14 @@ namespace Laba12
         public int Next = -1;
         public object Value;
         public object Key;
+        public Point()
+        {
+
+        }
+        public override string ToString()
+        {
+            return Key.ToString()+"   "+Value.ToString();
+        }
     }
     class DictionaryCommon : IDictionary<object, object>,IDisposable
     {
@@ -20,6 +28,18 @@ namespace Laba12
         private int SizeMass=100;
         private int[] buckets=new int[100];
         private Point[] entries= new Point[100];
+        public DictionaryCommon()
+        {
+            for(int i = 0; i < SizeMass; i++)
+            {
+                buckets[i] = -1;
+            }
+            Point temp = new Point();
+            for (int i = 0; i < SizeMass; i++)
+            {
+                entries[i] = new Point();
+            }
+        }
         public object this[object key]
         {
             get
@@ -30,7 +50,7 @@ namespace Laba12
                 {
                     do
                     {
-                        if (temp.Key.ToString() == key.ToString()) return temp;
+                        if (temp.Key.ToString() == key.ToString()) return temp.Value;
                         else
                         {
                             if (temp.Next == -1)
@@ -96,6 +116,13 @@ namespace Laba12
                 return Temp;
             }
         }
+        public void Show()
+        {
+            for(int i = 0; i < count; i++)
+            {
+                Console.WriteLine(entries[i].ToString());
+            }
+        }
         ICollection<object> IDictionary<object, object>.Values
         {
             get
@@ -111,19 +138,19 @@ namespace Laba12
         public void Add(object key, object value)
         {
             int hash = GetHash(key);
-            buckets[hash] = count;
-            this[hash] = value;
-            count++;
+            buckets[hash] = count++;
+            this[key] = value;
             CheckForSize();
         }
 
         private void CheckForSize()
         {
-            if (SizeMass / count > 0.7)
+            if (count / (double)SizeMass > 0.7)
             {
                 SizeMass += 100;
-                int[] te = new int[SizeMass];
-                Point[] Temp = new Point[SizeMass];
+                int[] te;
+                Point[] Temp;
+                CreateMasses(out te, out Temp);
                 for (int i = 0; i < count; i++)
                 {
                     Temp[i] = entries[i];
@@ -133,11 +160,13 @@ namespace Laba12
                 buckets = te;
             }
             else
-                if (SizeMass / count < 0.1 && SizeMass / count != 0)
+            if(SizeMass-100!=0)
+                if ((count/(double)(SizeMass-100)) < 0.1)
                 {
                     SizeMass -= 100;
-                    int[] te = new int[SizeMass];
-                    Point[] Temp = new Point[SizeMass];
+                    int[] te;
+                    Point[] Temp;
+                    CreateMasses(out te, out Temp);
                     for (int i = 0; i < count; i++)
                     {
                         Temp[i] = entries[i];
@@ -148,12 +177,25 @@ namespace Laba12
                 }
         }
 
+        private void CreateMasses(out int[] te, out Point[] Temp)
+        {
+            te = new int[SizeMass];
+            Temp = new Point[SizeMass];
+            for (int i = 0; i < SizeMass; i++)
+            {
+                te[i] = -1;
+            }
+            for (int i = 0; i < SizeMass; i++)
+            {
+                Temp[i] = new Point();
+            }
+        }
+
         public void Add(KeyValuePair<object, object> item)
         {
             int hash = GetHash(item.Key);
-            buckets[hash] = count;
-            this[hash] = item.Value;
-            count++;
+            buckets[hash] = count++;
+            this[item.Key] = item.Value;
             CheckForSize();
         }
 
@@ -208,7 +250,6 @@ namespace Laba12
         {
             return (this as IEnumerable<KeyValuePair<object, object>>).GetEnumerator();
         }
-
         public void Dispose()
         {
             Clear();
