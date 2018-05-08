@@ -11,16 +11,7 @@ namespace Laba12
         static void Main(string[] args)
         {
             Random rand = new Random();
-            DictionaryCommon Places = new DictionaryCommon();
-            List<PlacesV> Places1 = new List<PlacesV>();
-            List<PlacesV> Places2 = new List<PlacesV>();
-            RandomPlaces(rand, Places2);
-            RandomPlaces(rand, Places1);
-            for(int i = 0; i < Places1.Count; i++)
-            {
-                Places.Add(Places1[i], Places2[i]);
-            }
-            Places.Show();
+            CheckingDictComm(rand);
             //Places.Sort();
             //Console.WriteLine();
             //Places.Show();
@@ -37,6 +28,21 @@ namespace Laba12
             //Dictionary<string> < Student >
             //int count = 0;
             //ForEach(Places, Negativecount,ref count);
+        }
+
+        private static void CheckingDictComm(Random rand)
+        {
+            DictionaryCommon Places = new DictionaryCommon();
+            List<PlacesV> Places1 = new List<PlacesV>();
+            List<PlacesV> Places2 = new List<PlacesV>();
+            RandomPlaces(rand, Places2);
+            RandomPlaces(rand, Places1);
+            for (int i = 0; i < Places1.Count; i++)
+            {
+                Places.Add(Places1[i], Places2[i]);
+            }
+            Places.Sort();
+            Places.Show();
         }
 
         private static void RandomPlaces(Random rand, List<PlacesV> Places)

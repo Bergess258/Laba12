@@ -31,9 +31,8 @@ namespace Laba12
 
         public int CompareTo(object obj)
         {
-            PlacesV temp=obj as PlacesV;
-            if (temp.ToString() == this.ToString()) return 0;
-            if (temp.ToString().Length > this.ToString().Length) return 1;
+            if (obj.ToString() == this.ToString()) return 0;
+            if (obj.ToString().Length > this.ToString().Length) return 1;
             return -1;
         }
 
@@ -156,6 +155,10 @@ namespace Laba12
         public Adres(string name, int index1) : base(name)
         {
             index = index1;
+        }
+        public PlacesV BasePlace
+        {
+            get { return new PlacesV("Неизвестный город"); }
         }
         public override string ToString()
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Point
+    class Point: IComparable
     {
         public int HashCode = -1;
         public int Next = -1;
@@ -15,14 +15,23 @@ namespace Laba12
         public object Key;
         public Point()
         {
-
+            Value = "";
+            Key = "";
         }
+
+        public int CompareTo(object x)
+        {
+            if (x.ToString() == this.ToString()) return 0;
+            if (x.ToString().Length > this.ToString().Length) return 1;
+            return -1;
+        }
+
         public override string ToString()
         {
             return Key.ToString()+"   "+Value.ToString();
         }
     }
-    class DictionaryCommon : IDictionary<object, object>,IDisposable
+    class DictionaryCommon : IDictionary<object, object>,IDisposable, ICloneable
     {
         private int count=0;
         private int SizeMass=100;
@@ -77,12 +86,7 @@ namespace Laba12
                         {
                             if (temp.Next == -1)
                             {
-                                temp.Next = count;
-                                Point Temp2 = new Point();
-                                Temp2.HashCode = hash;
-                                Temp2.Key = key;
-                                Temp2.Value = value;
-                                entries[count] = Temp2;
+                                entries[count] = new Point() { HashCode = hash, Key = key, Value = value, Next=count};
                                 break;
                             }
                             temp = entries[temp.Next];
@@ -91,9 +95,7 @@ namespace Laba12
                 }
                 else
                 {
-                    temp.Value = value;//проверить
-                    temp.Key = key;
-                    entries[place] = temp;
+                    entries[place] = new Point() { HashCode = hash, Key = key, Value = value };
                 }
             }
         }
@@ -121,6 +123,26 @@ namespace Laba12
             for(int i = 0; i < count; i++)
             {
                 Console.WriteLine(entries[i].ToString());
+            }
+        }
+        public void Sort()
+        {
+            ClearBuckets();
+            Array.Sort(entries);
+            for(int i = 0; i < count; i++)
+            {
+                int hash = entries[i].HashCode;
+                if (buckets[hash] == -1) buckets[hash] = i;
+                else
+                {
+                    Point temp = entries[buckets[hash]];
+                    do
+                    {
+                        if (temp.Next == -1) { temp.Next = i;break; }
+                        temp = entries[temp.Next];
+                    } while (true);
+                }
+                    
             }
         }
         ICollection<object> IDictionary<object, object>.Values
@@ -205,10 +227,38 @@ namespace Laba12
             SizeMass = 100;
             buckets = new int[100];
             entries = new Point[100];
+            ClearBuckets();
+            ClearEntries();
         }
+
+        private void ClearEntries()
+        {
+            for (int i = 0; i < SizeMass; i++)
+            {
+                entries[i] = new Point();
+            }
+        }
+
+        private void ClearBuckets()
+        {
+            for (int i = 0; i < SizeMass; i++)
+            {
+                buckets[i] = -1;
+            }
+        }
+
         public bool Contains(KeyValuePair<object, object> item)
         {
-            throw new NotImplementedException();
+            int hash = GetHash(item.Key);
+            int place = buckets[hash];
+            Point temp = entries[place];
+            if (place == -1) return false;
+            do
+            {
+                if (temp.Key == item.Key && temp.Value == item.Value) return true;
+                if (temp.Next == -1) return false;
+                temp = entries[temp.Next];
+            } while (true);
         }
         public bool ContainsKey(object key)
         {
@@ -235,7 +285,23 @@ namespace Laba12
         }
         public bool Remove(object key)
         {
-            throw new NotImplementedException();
+            int hash = GetHash(key);
+            int place = buckets[hash];
+            Point Temp = entries[place];
+            do
+            {
+                if (Temp.Key == key)
+                {
+                    for (int i = place + 1; i < count; i++)
+                    {
+                        entries[i - 1] = entries[i];
+                        buckets[entries[i].HashCode]--;
+                    }
+                    return true;
+                }
+                if (Temp.Next == -1) return false;
+                else Temp = entries[Temp.Next];
+            } while (true);
         }
 
         public bool Remove(KeyValuePair<object, object> item)
@@ -253,6 +319,20 @@ namespace Laba12
         public void Dispose()
         {
             Clear();
+        }
+
+        public object Clone()
+        {
+            Point[] Temp = new Point[SizeMass];
+            for (int i = 0; i < SizeMass; i++)
+                Temp[i] = entries[i];
+            return new DictionaryCommon
+            {
+                count = this.count,
+                buckets = this.buckets,
+                entries = Temp,
+                SizeMass=this.SizeMass
+            };
         }
     }
 }
