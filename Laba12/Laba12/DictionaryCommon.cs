@@ -31,9 +31,10 @@ namespace Laba12
             return Key.ToString()+"   "+Value.ToString();
         }
     }
-    class DictionaryCommon : IDictionary<object, object>,IDisposable, ICloneable
+    class DictionaryCommon : IDictionary<object, object>,IDisposable, ICloneable,IEnumerator
     {
         private int count=0;
+        private int position = 0;
         private int SizeMass=100;
         private int[] buckets=new int[100];
         private Point[] entries= new Point[100];
@@ -273,7 +274,19 @@ namespace Laba12
         {
             return ((IEnumerable)buckets).GetEnumerator();
         }
-
+        bool IEnumerator.MoveNext()
+        {
+            if (position++ < count) return true;
+            return false;
+        }
+        object IEnumerator.Current
+        {
+            get { return entries[position]; }
+        }
+        void IEnumerator.Reset()
+        {
+            position = 0;
+        }
         public int GetHash(object adres)
         {
             int hashcode = 0;

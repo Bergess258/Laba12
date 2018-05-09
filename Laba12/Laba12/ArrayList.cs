@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class List : IEnumerable, ICloneable, ICollection, IComparer
+    class ArrayList : IEnumerable, ICloneable, ICollection, IComparer, IEnumerator
     {
+        int position = 0;
         PlacesV[] mas = new PlacesV[0];
         public PlacesV this[int index]
         {
@@ -37,7 +38,11 @@ namespace Laba12
 
         public object SyncRoot => throw new NotImplementedException();
 
-        public bool IsSynchronized => throw new NotImplementedException();
+        public bool IsSynchronized { get { return false; } }
+
+        public bool IsFixedSize { get { return false; } }
+
+        object IList.this[int index] { get { return mas[index]; } set { mas[index]=(PlacesV)value; } }
 
         public bool Remove(PlacesV item)
         {
@@ -73,7 +78,19 @@ namespace Laba12
         {
             return ((IEnumerable)this).GetEnumerator();
         }
-
+        bool IEnumerator.MoveNext()
+        {
+            if (position++ < mas.Length) return true;
+            return false;
+        }
+        object IEnumerator.Current
+        {
+            get { return mas[position]; }
+        }
+        void IEnumerator.Reset()
+        {
+            position = 0;
+        }
         object ICloneable.Clone()
         {
             return this;
@@ -101,6 +118,10 @@ namespace Laba12
             }
             else
                 throw new IndexOutOfRangeException();
+        }
+        public void RemoveAt(int index)
+        {
+            
         }
     }
 }
