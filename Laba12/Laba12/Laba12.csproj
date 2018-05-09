@@ -45,6 +45,7 @@
     <Compile Include="ArrayList.cs" />
     <Compile Include="DictionaryCommon.cs" />
     <Compile Include="DictionaryPlace.cs" />
+    <Compile Include="DictionaryV2.cs" />
     <Compile Include="ListT.cs" />
     <Compile Include="Places.cs" />
     <Compile Include="Program.cs" />
