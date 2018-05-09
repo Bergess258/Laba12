@@ -9,6 +9,7 @@ namespace Laba12
 {
     class ArrayList : IEnumerable, ICloneable, ICollection, IComparer, IEnumerator
     {
+        readonly object suncRoot = new object();
         int position = 0;
         PlacesV[] mas = new PlacesV[0];
         public PlacesV this[int index]
@@ -36,13 +37,11 @@ namespace Laba12
             get { return mas.Length; }
         }
 
-        public object SyncRoot => throw new NotImplementedException();
+        public object SyncRoot { get { return suncRoot; } }
 
-        public bool IsSynchronized { get { return false; } }
+        public bool IsSynchronized { get { return true; } }
 
         public bool IsFixedSize { get { return false; } }
-
-        object IList.this[int index] { get { return mas[index]; } set { mas[index]=(PlacesV)value; } }
 
         public bool Remove(PlacesV item)
         {
