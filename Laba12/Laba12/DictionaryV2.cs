@@ -38,7 +38,7 @@ namespace Laba12
         private int SizeMass = 100;
         private int[] buckets = new int[100];
         private Point[] entries = new Point[100];
-        public DictionaryCommon()
+        public DictionaryV2()
         {
             for (int i = 0; i < SizeMass; i++)
             {
@@ -339,7 +339,7 @@ namespace Laba12
             Point[] Temp = new Point[SizeMass];
             for (int i = 0; i < SizeMass; i++)
                 Temp[i] = entries[i];
-            return new DictionaryCommon<TKey, TValue>
+            return new DictionaryV2<TKey, TValue>
             {
                 count = this.count,
                 buckets = this.buckets,
