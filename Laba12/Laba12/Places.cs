@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class PlacesV :IComparable
+    class PlacesV : IComparable
     {
         string name;
         public string Name
@@ -34,6 +34,10 @@ namespace Laba12
             if (obj.ToString() == this.ToString()) return 0;
             if (obj.ToString().Length > this.ToString().Length) return 1;
             return -1;
+        }
+        public PlacesV BasePlace
+        {
+            get { return new PlacesV(Name); }
         }
 
         public override string ToString()
@@ -80,6 +84,14 @@ namespace Laba12
         {
             return Name + " Область";
         }
+        public static string RandomName(Random rand)
+        {
+            string Region;
+            string[] s = new string[] { "Магаданская", "Адыгейская", "Башкортостанская", "Алтайская", "Дагестанская", "Татарстанская", "Чувашская" };
+            int temp = rand.Next(s.Length);
+            Region = s[temp];
+            return Region;
+        }
     }
 
     class City : PlacesV // кол-во горожан во всех регионах 
@@ -109,6 +121,14 @@ namespace Laba12
         {
             return "Город " + Name;
         }
+        public static string RandomCity(Random rand)
+        {
+            string Name;
+            string[] s = new string[] { "Пермь", "Кунгур", "Ижевск", "Боготол", "Саратов", "Чернушка", "Волгоград" };
+            int temp = rand.Next(s.Length);
+            Name = s[temp];
+            return Name;
+        }
     }
 
     class Megapolis : PlacesV
@@ -134,6 +154,14 @@ namespace Laba12
         {
             return "Мегаполис " + Name;
         }
+        public static string RandomMegapolis(Random rand)
+        {
+            string Name;
+            string[] s = new string[] { "Москва", "Санкт-Петербург", "Новосибирск", "Екатеренбург", "Нижнiй новгород", "Казань", "Самара" };
+            int temp = rand.Next(s.Length);
+            Name = s[temp];
+            return Name;
+        }
     }
 
     class Adres : PlacesV
@@ -156,13 +184,17 @@ namespace Laba12
         {
             index = index1;
         }
-        public PlacesV BasePlace
-        {
-            get { return new PlacesV("Неизвестный город"); }
-        }
         public override string ToString()
         {
             return "Адрес: " + Name;
+        }
+        public static string RandomAdres(Random rand)
+        {
+            string[] Streets = new string[] { "улица Павловская", "улица Бахаревская", "улица Гамовская", "улица Запрудская", "улица Ключевая", "улица Красавинская", "улица Липогорская", "улица Набережная" };
+            string adres = "";
+            adres += Streets[rand.Next(0, Streets.Length)] + " ";
+            adres += rand.Next(0, 500);
+            return adres;
         }
     }
 }
