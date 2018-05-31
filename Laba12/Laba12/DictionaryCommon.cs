@@ -7,50 +7,50 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class Point: IComparable
+    class DictionaryCommon<TKey, TValue> : IDictionary<TKey, TValue>, IDisposable, ICloneable, IEnumerator
     {
-        public int HashCode = -1;
-        public int Next = -1;
-        public object Value;
-        public object Key;
-        public Point()
+        public class Point : IComparable
         {
-            Value = "";
-            Key = "";
-        }
+            public int HashCode = -1;
+            public int Next = -1;
+            public TValue Value;
+            public TKey Key;
+            public Point()
+            {
 
-        public int CompareTo(object x)
-        {
-            if (x.ToString() == this.ToString()) return 0;
-            if (x.ToString().Length > this.ToString().Length) return 1;
-            return -1;
-        }
+            }
+            public Point(TKey key, TValue value)
+            {
+                Value = value;
+                Key = key;
+            }
+            public int CompareTo(object x)
+            {
+                if (x.ToString() == this.ToString()) return 0;
+                if (x.ToString().Length > this.ToString().Length) return 1;
+                return -1;
+            }
 
-        public override string ToString()
-        {
-            return Key.ToString()+"   "+Value.ToString();
+            public override string ToString()
+            {
+                return Key.ToString() + "   " + Value.ToString();
+            }
         }
-    }
-    class DictionaryCommon : IDictionary<object, object>,IDisposable, ICloneable,IEnumerator
-    {
-        private int count=0;
+        private int count = 0;
         private int position = 0;
-        private int SizeMass=100;
-        private int[] buckets=new int[100];
-        private Point[] entries= new Point[100];
+        private int SizeMass = 100;
+        private int[] buckets = new int[100];
+        private Point[] entries = new Point[100];
         public DictionaryCommon()
         {
-            for(int i = 0; i < SizeMass; i++)
-            {
-                buckets[i] = -1;
-            }
-            Point temp = new Point();
-            for (int i = 0; i < SizeMass; i++)
-            {
-                entries[i] = new Point();
-            }
+            CreateMasses(out buckets, out entries);
         }
-        public object this[object key]
+        public DictionaryCommon(int c)
+        {
+            SizeMass = c;
+            CreateMasses(out buckets, out entries);
+        }
+        public TValue this[TKey key]
         {
             get
             {
@@ -76,42 +76,20 @@ namespace Laba12
             set
             {
                 int hash = GetHash(key);
-                int place = buckets[hash];
-                Point temp = entries[place];
-                if (temp.HashCode != -1)
-                {
-                    do
-                    {
-                        if (temp.Key.ToString() == key.ToString() && temp.Value.ToString() == value.ToString()) break;
-                        else
-                        {
-                            if (temp.Next == -1)
-                            {
-                                entries[count] = new Point() { HashCode = hash, Key = key, Value = value, Next=count};
-                                break;
-                            }
-                            temp = entries[temp.Next];
-                        }
-                    } while (true);
-                }
-                else
-                {
-                    entries[place] = new Point() { HashCode = hash, Key = key, Value = value };
-                }
+                buckets[hash] = count;
+                entries[count] = new Point() { HashCode = hash, Key = key, Value = value, Next = count };
             }
         }
         public int Count
         {
             get { return count; }
         }
-
         public bool IsReadOnly { get { return false; } }
-
-        ICollection<object> IDictionary<object, object>.Keys
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys
         {
             get
             {
-                object[] Temp = new object[count];
+                TKey[] Temp = new TKey[count];
                 for (int i = 0; i < count; i++)
                 {
                     Temp[i] = entries[i].Key;
@@ -121,7 +99,7 @@ namespace Laba12
         }
         public void Show()
         {
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 Console.WriteLine(entries[i].ToString());
             }
@@ -130,7 +108,7 @@ namespace Laba12
         {
             ClearBuckets();
             Array.Sort(entries);
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 int hash = entries[i].HashCode;
                 if (buckets[hash] == -1) buckets[hash] = i;
@@ -139,18 +117,18 @@ namespace Laba12
                     Point temp = entries[buckets[hash]];
                     do
                     {
-                        if (temp.Next == -1) { temp.Next = i;break; }
+                        if (temp.Next == -1) { temp.Next = i; break; }
                         temp = entries[temp.Next];
                     } while (true);
                 }
-                    
+
             }
         }
-        ICollection<object> IDictionary<object, object>.Values
+        ICollection<TValue> IDictionary<TKey, TValue>.Values
         {
             get
             {
-                object[] Temp = new object[count];
+                TValue[] Temp = new TValue[count];
                 for (int i = 0; i < count; i++)
                 {
                     Temp[i] = entries[i].Value;
@@ -158,14 +136,36 @@ namespace Laba12
                 return Temp;
             }
         }
-        public void Add(object key, object value)
+        public void Add(TKey key, TValue value)
         {
             int hash = GetHash(key);
-            buckets[hash] = count++;
-            this[key] = value;
+            int place = buckets[hash];
+            string ForKey = key.ToString(), ForValue = value.ToString();
+            if (place != -1)
+            {
+                Point temp = entries[place];
+                do
+                {
+                    if (temp.Key.ToString() == ForKey && temp.Value.ToString() == ForValue) break;
+                    else
+                    {
+                        if (temp.Next == -1)
+                        {
+                            entries[place].Next = count;
+                            entries[count++] = new Point() { HashCode = hash, Key = key, Value = value };
+                            break;
+                        }
+                        temp = entries[temp.Next];
+                    }
+                } while (true);
+            }
+            else
+            {
+                entries[count] = new Point() { HashCode = hash, Key = key, Value = value };
+                buckets[hash] = count++;
+            }
             CheckForSize();
         }
-
         private void CheckForSize()
         {
             if (count / (double)SizeMass > 0.7)
@@ -183,8 +183,8 @@ namespace Laba12
                 buckets = te;
             }
             else
-            if(SizeMass-100!=0)
-                if ((count/(double)(SizeMass-100)) < 0.1)
+            if (SizeMass - 100 != 0)
+                if ((count / (double)(SizeMass - 100)) < 0.1)
                 {
                     SizeMass -= 100;
                     int[] te;
@@ -199,7 +199,6 @@ namespace Laba12
                     buckets = te;
                 }
         }
-
         private void CreateMasses(out int[] te, out Point[] Temp)
         {
             te = new int[SizeMass];
@@ -213,15 +212,10 @@ namespace Laba12
                 Temp[i] = new Point();
             }
         }
-
-        public void Add(KeyValuePair<object, object> item)
+        public void Add(KeyValuePair<TKey, TValue> item)
         {
-            int hash = GetHash(item.Key);
-            buckets[hash] = count++;
-            this[item.Key] = item.Value;
-            CheckForSize();
+            Add(item.Key, item.Value);
         }
-
         public void Clear()
         {
             count = 0;
@@ -231,7 +225,6 @@ namespace Laba12
             ClearBuckets();
             ClearEntries();
         }
-
         private void ClearEntries()
         {
             for (int i = 0; i < SizeMass; i++)
@@ -239,7 +232,6 @@ namespace Laba12
                 entries[i] = new Point();
             }
         }
-
         private void ClearBuckets()
         {
             for (int i = 0; i < SizeMass; i++)
@@ -247,29 +239,36 @@ namespace Laba12
                 buckets[i] = -1;
             }
         }
-
-        public bool Contains(KeyValuePair<object, object> item)
+        public bool Contains(KeyValuePair<TKey, TValue> item)
         {
             int hash = GetHash(item.Key);
+            int place = buckets[hash];
+            if (place == -1) return false;
+            Point temp = entries[place];
+            do
+            {
+                if (temp.Key.ToString() == item.Key.ToString() && temp.Value.ToString() == item.Value.ToString()) return true;
+                if (temp.Next == -1) return false;
+                temp = entries[temp.Next];
+            } while (true);
+        }
+        public bool ContainsKey(TKey key)
+        {
+            int hash = GetHash(key);
             int place = buckets[hash];
             Point temp = entries[place];
             if (place == -1) return false;
             do
             {
-                if (temp.Key == item.Key && temp.Value == item.Value) return true;
+                if (temp.Key.ToString() == key.ToString()) return true;
                 if (temp.Next == -1) return false;
                 temp = entries[temp.Next];
             } while (true);
         }
-        public bool ContainsKey(object key)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
-        public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerator GetEnumerator()
         {
             return ((IEnumerable)buckets).GetEnumerator();
@@ -293,17 +292,17 @@ namespace Laba12
             double a = 0.6180339887;
             foreach (char s in adres.ToString()) hashcode += (int)s;
             var p = Math.Truncate(hashcode * a);
-            var t = (hashcode * a - p)%SizeMass;
-            return (int)t;
+            var t = (hashcode * a - p) * SizeMass;
+            return (int)t % SizeMass;
         }
-        public bool Remove(object key)
+        public bool Remove(TKey key)
         {
             int hash = GetHash(key);
             int place = buckets[hash];
             Point Temp = entries[place];
             do
             {
-                if (Temp.Key == key)
+                if (Temp.Key.ToString() == key.ToString())
                 {
                     for (int i = place + 1; i < count; i++)
                     {
@@ -316,35 +315,46 @@ namespace Laba12
                 else Temp = entries[Temp.Next];
             } while (true);
         }
-
-        public bool Remove(KeyValuePair<object, object> item)
+        public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             throw new NotImplementedException();
         }
-        public bool TryGetValue(object key, out object value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
             throw new NotImplementedException();
         }
-        IEnumerator<KeyValuePair<object, object>> IEnumerable<KeyValuePair<object, object>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
-            return (this as IEnumerable<KeyValuePair<object, object>>).GetEnumerator();
+            return (entries as IEnumerable<KeyValuePair<TKey, TValue>>).GetEnumerator();
+        }
+        public IEnumerable Get()
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return entries[i];
+            }
+            yield break;
         }
         public void Dispose()
         {
             Clear();
         }
-
         public object Clone()
         {
             Point[] Temp = new Point[SizeMass];
+            int[] f = new int[SizeMass];
             for (int i = 0; i < SizeMass; i++)
+            {
                 Temp[i] = entries[i];
-            return new DictionaryCommon
+                f[i] = buckets[i];
+            }
+
+            return new DictionaryCommon<TKey, TValue>
             {
                 count = this.count,
-                buckets = this.buckets,
+                buckets = f,
                 entries = Temp,
-                SizeMass=this.SizeMass
+                SizeMass = this.SizeMass
             };
         }
     }

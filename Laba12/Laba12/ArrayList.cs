@@ -79,7 +79,7 @@ namespace Laba12
         }
         bool IEnumerator.MoveNext()
         {
-            if (position++ < mas.Length) return true;
+            if (++position < mas.Length) return true;
             return false;
         }
         object IEnumerator.Current
@@ -104,7 +104,6 @@ namespace Laba12
             if (x.ToString().Length > y.ToString().Length) return 1;
             return -1;
         }
-
         public void CopyTo(Array array, int index)
         {
             if (index > 0 && index <= mas.Length)

@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>,IEnumerator<T>
+    class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>
     {
-        int position = 0;
         private int count = 0;
         private T[] mas = new T[0];
         public List()
@@ -30,6 +29,57 @@ namespace Laba12
             get { return mas[index]; }
             set { mas[index] = value; }
         }
+        static void RandAdd(int CountAdding)
+        {
+            do
+            {
+                Random rand = new Random();
+                string Name = "";
+                int c = rand.Next(4);
+                if (c == 0)
+                {
+                    Region temp;
+                    do
+                    {
+                        Name = RandomNameRegion(rand);
+                        temp = new Region(Name, rand.Next(0, 10000000), rand.Next(0, 20));
+                    } while (Contains(temp));
+                    Add(temp);
+                }
+                else
+                if (c == 1)
+                {
+                    City temp;
+                    do
+                    {
+                        Name = RandomCity(rand);
+                        temp = new City(Name, rand.Next(0, 900000));
+                    } while (Contains(temp));
+                    Places.Add(temp);
+                }
+                else
+                if (c == 2)
+                {
+                    Megapolis temp;
+                    do
+                    {
+                        Name = RandomMegapolis(rand);
+                        temp = new Megapolis(Name, rand.Next(0, 20));
+                    } while (Contains(temp));
+                    Places.Add(temp);
+                }
+                else
+                {
+                    Adres temp;
+                    do
+                    {
+                        Name = RandomAdres(rand);
+                        temp = new Adres(Name);
+                    } while (Contains(temp));
+                    Add(temp);
+                }
+            } while (CountAdding-- > 0);
+        }
         public void Add(T item)
         {
             if (count == mas.Length)
@@ -43,27 +93,22 @@ namespace Laba12
                 mas[count] = item;
             count++;
         }
-        //public void Add(PlacesV item)
-        //{
-        //    if (count == mas.Length)
-        //    {
-        //        PlacesV[] Temp = new PlacesV[mas.Length + 1];
-        //        mas.CopyTo(Temp, 0);
-        //        Temp[Temp.Length - 1] = item;
-        //        mas = Temp;
-        //    }
-        //    else
-        //    {
-        //        PlacesV[] Temp = new PlacesV[mas.Length ];
-        //        mas.CopyTo(Temp, 0);
-        //        Temp[count] = item;
-                
-        //    }
-        //    count++;
-        //}
         public void Clear()
         {
             mas = new T[0];
+        }
+        public void CopyTo(T[] array, int index)
+        {
+            if (index > 0 && index <= mas.Length)
+            {
+                T[] Temp = new T[mas.Length - index + 1];
+                int c = 0;
+                for (int i = index - 1; i < mas.Length; i++)
+                    Temp[c++] = mas[i];
+                array = Temp;
+            }
+            else
+                throw new IndexOutOfRangeException();
         }
         public bool IsReadOnly
         {
@@ -91,24 +136,16 @@ namespace Laba12
         }
         public void Show()
         {
-            foreach (T temp in mas)
+            foreach(T temp in mas)
             {
                 Console.WriteLine(temp.ToString());
             }
         }
         public bool Contains(T Search)
         {
-            foreach (T temp in mas)
+            foreach(T temp in mas)
             {
-                if (temp.ToString() == Search.ToString()) return true;
-            }
-            return false;
-        }
-        public bool Contains(PlacesV Search)
-        {
-            foreach (T temp in mas)
-            {
-                if (temp.ToString() == Search.ToString()) return true;
+                if (temp.ToString()==Search.ToString()) return true;
             }
             return false;
         }
@@ -120,24 +157,7 @@ namespace Laba12
         {
             return (this as IEnumerable<T>).GetEnumerator();
         }
-        bool IEnumerator.MoveNext()
-        {
-            if (++position < mas.Length) return true;
-            return false;
-        }
-        object IEnumerator.Current
-        {
-            get { return mas[position]; }
-        }
 
-        public T Current
-        {
-            get { return mas[position]; }
-        }
-        void IEnumerator.Reset()
-        {
-            position = 0;
-        }
         object ICloneable.Clone()
         {
             return this;
@@ -146,30 +166,12 @@ namespace Laba12
         {
             Array.Sort(mas);
         }
-        public void CopyTo(T[] array, int index)
-        {
-            if (index > 0 && index <= mas.Length)
-            {
-                T[] Temp = new T[mas.Length - index + 1];
-                int c = 0;
-                for (int i = index - 1; i < mas.Length; i++)
-                    Temp[c++] = mas[i];
-                array = Temp;
-            }
-            else
-                throw new IndexOutOfRangeException();
-        }
 
         public int Compare(T x, T y)
         {
             if (x.ToString().Length == y.ToString().Length) return 0;
             if (x.ToString().Length > y.ToString().Length) return 1;
             return -1;
-        }
-        public void Dispose()
-        {
-            mas = new T[0];
-            count = 0;
         }
     }
 }

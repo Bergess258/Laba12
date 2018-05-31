@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Laba12
@@ -10,6 +11,7 @@ namespace Laba12
     {
         static void Main(string[] args)
         {
+            List<PlacesV> steb = new List<PlacesV>();
             Random rand = new Random();
             CheckingDictComm(rand);
             //Places.Sort();
@@ -32,19 +34,15 @@ namespace Laba12
 
         private static void CheckingDictComm(Random rand)
         {
-            DictionaryCommon Places = new DictionaryCommon();
-            List<PlacesV> Places1 = new List<PlacesV>();
-            List<PlacesV> Places2 = new List<PlacesV>();
-            RandomPlaces(rand, Places2);
-            RandomPlaces(rand, Places1);
-            for (int i = 0; i < Places1.Count; i++)
+            DictionaryCommon<PlacesV,PlacesV> Places = new DictionaryCommon<PlacesV, PlacesV>();
+            for (int i = 0; i < 5000; i++)
             {
-                Places.Add(Places1[i], Places2[i]);
+                Thread.Sleep(50);
+                Places.Add(PlacesV.RandAdd(rand), PlacesV.RandAdd(rand));
             }
             Places.Sort();
             Places.Show();
         }
-
         private static void RandomPlaces(Random rand, List<PlacesV> Places)
         {
             for (int i = 0; i < 10; i++)
@@ -96,30 +94,30 @@ namespace Laba12
             }
         }
 
-        public static void ForEach(ICollection<PlacesV> collection, Handler handler,ref int result)
-        {
-            foreach(PlacesV x in collection)
-            {
-                handler(x, ref result);
-            }
-        }
-        public static void Negativecount(PlacesV x, ref int y)//даунизми)
-        {
-            if (x.ToString().Length < 0) y++;
-        }
-        public static void Positivecount(int x, ref int y)
-        {
-            if (x > 0) y++;
-        }
-        public static void Max(int x, ref int max)
-        {
-            if (x > max) max = x;
-        }
-        public static void Min(int x, ref int min)
-        {
-            if (x < min) min = x;
-        }
-        public delegate void Handler(PlacesV x, ref int y);
+        //public static void ForEach(ICollection<PlacesV> collection, Handler handler,ref int result)
+        //{
+        //    foreach(PlacesV x in collection)
+        //    {
+        //        handler(x, ref result);
+        //    }
+        //}
+        //public static void Negativecount(PlacesV x, ref int y)//даунизми)
+        //{
+        //    if (x.ToString().Length < 0) y++;
+        //}
+        //public static void Positivecount(int x, ref int y)
+        //{
+        //    if (x > 0) y++;
+        //}
+        //public static void Max(int x, ref int max)
+        //{
+        //    if (x > max) max = x;
+        //}
+        //public static void Min(int x, ref int min)
+        //{
+        //    if (x < min) min = x;
+        //}
+        //public delegate void Handler(PlacesV x, ref int y);
         private static string RandomAdres(Random rand)
         {
             string[] Streets = new string[] { "улица Павловская", "улица Бахаревская", "улица Гамовская", "улица Запрудская", "улица Ключевая", "улица Красавинская", "улица Липогорская", "улица Набережная" };

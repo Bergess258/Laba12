@@ -28,7 +28,6 @@ namespace Laba12
         {
             Name = name;
         }
-
         public int CompareTo(object obj)
         {
             if (obj.ToString() == this.ToString()) return 0;
@@ -39,7 +38,41 @@ namespace Laba12
         {
             get { return new PlacesV(Name); }
         }
-
+        public static PlacesV RandAdd(Random rand)
+        {
+            string Name = "";
+            int c = rand.Next(4);
+            if (c == 0)
+            {
+                Region temp;
+                Name = Region.RandomName(rand);
+                temp = new Region(Name, rand.Next(0, 10000000), rand.Next(0, 20));
+                return temp;
+            }
+            else
+            if (c == 1)
+            {
+                City temp;
+                Name = City.RandomCity(rand);
+                temp = new City(Name, rand.Next(0, 900000));
+                return temp;
+            }
+            else
+            if (c == 2)
+            {
+                Megapolis temp;
+                Name = Megapolis.RandomMegapolis(rand);
+                temp = new Megapolis(Name, rand.Next(0, 20));
+                return temp;
+            }
+            else
+            {
+                Adres temp;
+                Name = Adres.RandomAdres(rand);
+                temp = new Adres(Name);
+                return temp;
+            }
+        }
         public override string ToString()
         {
             return name;
@@ -190,7 +223,7 @@ namespace Laba12
         }
         public static string RandomAdres(Random rand)
         {
-            string[] Streets = new string[] { "улица Павловская", "улица Бахаревская", "улица Гамовская", "улица Запрудская", "улица Ключевая", "улица Красавинская", "улица Липогорская", "улица Набережная" };
+            string[] Streets = new string[] { "улица Павловская", "улица Бахаревская", "улица Гамовская", "улица Запрудская", "улица Ключевая", "улица Красавинская", "улица Липогорская", "улица Набережная", "улица Толбухина", "улица Янаульская" };
             string adres = "";
             adres += Streets[rand.Next(0, Streets.Length)] + " ";
             adres += rand.Next(0, 500);
