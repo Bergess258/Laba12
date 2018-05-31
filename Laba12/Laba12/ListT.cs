@@ -9,7 +9,7 @@ namespace Laba12
 {
     class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>,IEnumerator<T>
     {
-        int position = 0;
+        int position = -1;
         private int count = 0;
         private T[] mas = new T[0];
         public List()
@@ -24,7 +24,6 @@ namespace Laba12
         {
             this.mas = mas;
         }
-
         public T this[int index]
         {
             get { return mas[index]; }
@@ -122,7 +121,7 @@ namespace Laba12
         }
         bool IEnumerator.MoveNext()
         {
-            if (++position < mas.Length) return true;
+            if (position++ < mas.Length-1) return true;
             return false;
         }
         object IEnumerator.Current
@@ -168,8 +167,7 @@ namespace Laba12
         }
         public void Dispose()
         {
-            mas = new T[0];
-            count = 0;
+            ((IEnumerator)this).Reset();
         }
     }
 }

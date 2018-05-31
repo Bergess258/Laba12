@@ -11,18 +11,14 @@ namespace Laba12
     {
         static void Main(string[] args)
         {
-            List<PlacesV> steb = new List<PlacesV>();
             Random rand = new Random();
-            CheckingDictComm(rand);
-            //Places.Sort();
-            //Console.WriteLine();
-            //Places.Show();
-            //PlacesV[] sd = new PlacesV[10];
-            //Places.CopyTo(sd, 9);
-            //foreach(PlacesV t in sd)
-            //{
-            //    Console.WriteLine(t.ToString());
-            //}
+            //CheckingDictComm(rand);
+            List<PlacesV> steb = new List<PlacesV>();
+            for (int i = 0; i < 50; i++)
+            {
+                Thread.Sleep(50);
+                steb.Add(PlacesV.RandAdd(rand));
+            }
             //BaseTo
             //List<Person>
             //List<String>
@@ -35,7 +31,7 @@ namespace Laba12
         private static void CheckingDictComm(Random rand)
         {
             DictionaryCommon<PlacesV,PlacesV> Places = new DictionaryCommon<PlacesV, PlacesV>();
-            for (int i = 0; i < 5000; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Thread.Sleep(50);
                 Places.Add(PlacesV.RandAdd(rand), PlacesV.RandAdd(rand));

@@ -30,7 +30,7 @@ namespace Laba12
             {
                 buckets[i] = -1;
             }
-            Point temp = new Point();
+            Entry temp = new Entry();
             for (int i = 0; i < SizeMass; i++)
             {
                 entries[i] = new Entry();

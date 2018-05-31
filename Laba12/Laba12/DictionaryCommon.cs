@@ -37,7 +37,7 @@ namespace Laba12
             }
         }
         private int count = 0;
-        private int position = 0;
+        private int position = -1;
         private int SizeMass = 100;
         private int[] buckets = new int[100];
         private Point[] entries = new Point[100];
@@ -265,7 +265,7 @@ namespace Laba12
                 temp = entries[temp.Next];
             } while (true);
         }
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        public void CopyTo(DictionaryCommon<TKey, TValue> array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
@@ -275,7 +275,7 @@ namespace Laba12
         }
         bool IEnumerator.MoveNext()
         {
-            if (position++ < count) return true;
+            if (position++ < count-1) return true;
             return false;
         }
         object IEnumerator.Current
