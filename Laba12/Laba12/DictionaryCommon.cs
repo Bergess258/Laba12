@@ -357,5 +357,10 @@ namespace Laba12
                 SizeMass = this.SizeMass
             };
         }
+
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

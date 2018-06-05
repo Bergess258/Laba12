@@ -12,20 +12,19 @@ namespace Laba12
         static void Main(string[] args)
         {
             Random rand = new Random();
-            //CheckingDictComm(rand);
             List<PlacesV> steb = new List<PlacesV>();
             for (int i = 0; i < 50; i++)
             {
                 Thread.Sleep(50);
                 steb.Add(PlacesV.RandAdd(rand));
             }
-            //BaseTo
-            //List<Person>
-            //List<String>
-            //Dictionary<Person> < Student >
-            //Dictionary<string> < Student >
-            //int count = 0;
-            //ForEach(Places, Negativecount,ref count);
+            int c = 0;
+            foreach(PlacesV t in steb)
+            {
+                c++;
+                Console.WriteLine(t.ToString());
+            }
+            Console.WriteLine(c);
         }
 
         private static void CheckingDictComm(Random rand)

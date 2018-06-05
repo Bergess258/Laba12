@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Laba12
 {
-    class List<T> : IEnumerable<T>, ICloneable, ICollection<T>, IComparer<T>,IEnumerator<T>
+    class List<T> : IEnumerable<T>, ICloneable, ICollection<T>,IEnumerator<T>
     {
         int position = -1;
         private int count = 0;
-        private T[] mas = new T[0];
+        private T[] mas = new T[8];
         public List()
         {
 
@@ -22,7 +22,10 @@ namespace Laba12
         }
         public List(T[] mas)
         {
-            this.mas = mas;
+            int c = 0;
+            foreach (T t in mas)
+                this.mas[c++] = t;
+            
         }
         public T this[int index]
         {
@@ -31,35 +34,14 @@ namespace Laba12
         }
         public void Add(T item)
         {
+            mas[count++] = item;
             if (count == mas.Length)
             {
-                T[] Temp = new T[mas.Length + 1];
-                mas.CopyTo(Temp, 0);
-                Temp[Temp.Length - 1] = item;
-                mas = Temp;
+                T[] temp = new T[mas.Length + 12];
+                mas.CopyTo(temp, 0);
+                mas = temp;
             }
-            else
-                mas[count] = item;
-            count++;
         }
-        //public void Add(PlacesV item)
-        //{
-        //    if (count == mas.Length)
-        //    {
-        //        PlacesV[] Temp = new PlacesV[mas.Length + 1];
-        //        mas.CopyTo(Temp, 0);
-        //        Temp[Temp.Length - 1] = item;
-        //        mas = Temp;
-        //    }
-        //    else
-        //    {
-        //        PlacesV[] Temp = new PlacesV[mas.Length ];
-        //        mas.CopyTo(Temp, 0);
-        //        Temp[count] = item;
-                
-        //    }
-        //    count++;
-        //}
         public void Clear()
         {
             mas = new T[0];
@@ -111,32 +93,11 @@ namespace Laba12
             }
             return false;
         }
-        public IEnumerator<T> GetEnumerator()
-        {
-            return ((IEnumerable<T>)mas).GetEnumerator();//вапрыва
-        }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (this as IEnumerable<T>).GetEnumerator();
-        }
-        bool IEnumerator.MoveNext()
-        {
-            if (position++ < mas.Length-1) return true;
-            return false;
-        }
-        object IEnumerator.Current
-        {
-            get { return mas[position]; }
-        }
-
         public T Current
         {
             get { return mas[position]; }
         }
-        void IEnumerator.Reset()
-        {
-            position = 0;
-        }
+        object IEnumerator.Current { get { return mas[position]; } } 
         object ICloneable.Clone()
         {
             return this;
@@ -158,16 +119,31 @@ namespace Laba12
             else
                 throw new IndexOutOfRangeException();
         }
-
-        public int Compare(T x, T y)
-        {
-            if (x.ToString().Length == y.ToString().Length) return 0;
-            if (x.ToString().Length > y.ToString().Length) return 1;
-            return -1;
-        }
         public void Dispose()
         {
             ((IEnumerator)this).Reset();
+        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return (IEnumerator<T>)this;
+        }
+        public bool MoveNext()
+        {
+            if (position < count - 1)
+            {
+                position++;
+                return true;
+            }
+            return false;
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
+        public IEnumerator GetEnumerator()
+        {
+            return (IEnumerator)this;
         }
     }
 }
